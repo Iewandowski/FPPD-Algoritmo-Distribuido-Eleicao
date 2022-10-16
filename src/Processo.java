@@ -53,8 +53,9 @@ public class Processo extends Thread {
         if (this.ativo) {
             if (!proximo.isAtivo() && proximo.coordenador) {
                 System.out.println("Processo P" + this.getId() + " identificou falha no coordenador");
-            }
+                anel.gerenciador((int) this.getId(), "ELEICAO");
+            } else
+                requisicao((int) proximo.getId());
         }
     }
-
 }
