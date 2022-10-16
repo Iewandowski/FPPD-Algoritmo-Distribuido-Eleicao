@@ -20,9 +20,9 @@ public class Processo extends Thread {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
-        if (coordenador) {
-            setCoordenador(false);
-        }
+        // if (coordenador) {
+        //     setCoordenador(false);
+        // }
     }
 
     public long getId() {
@@ -49,13 +49,13 @@ public class Processo extends Thread {
         this.coordenador = coordenador;
     }
 
-    public void requisicao(int id) {
-        if (this.ativo) {
-            if (!proximo.isAtivo() && proximo.coordenador) {
-                System.out.println("Processo P" + this.getId() + " identificou falha no coordenador");
-                anel.gerenciador((int) this.getId(), "ELEICAO");
-            } else
-                requisicao((int) proximo.getId());
-        }
-    }
+    // public void requisicao(int id) {
+    //     if (this.ativo) {
+    //         if (!proximo.isAtivo() && proximo.coordenador) {
+    //             System.out.println("Processo P" + this.getId() + " identificou falha no coordenador");
+    //             anel.gerenciador((int) this.getId(), "ELEICAO");
+    //         } else
+    //             requisicao((int) proximo.getId());
+    //     }
+    // }
 }
