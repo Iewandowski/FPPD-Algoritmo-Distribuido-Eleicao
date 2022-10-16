@@ -4,6 +4,7 @@ public class App {
         Anel anel = new Anel();
 
         anel.gerarProcesso();
+        anel.iniciarRequisição();
         anel.finalizarCoordenador();
     }
 }
