@@ -47,16 +47,36 @@ public class Anel {
                 "O processo " + listaProcessos.get(novo_coordenador).getId() + " ganhou a eleicao");
     }
 
-    public void finalizarCoordenador(int id) {
-        listaProcessos.get(id).setAtivo(false);
-        System.out.println("O processo coordenador parou");
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        listaProcessos.get(id).setAtivo(true);
-        System.out.println("O processo P" + id + " voltou");
-        eleicao(id);
+    public void finalizarCoordenador() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                int coordId = -1;
+
+                System.out.println("Verificando coordenador...");
+
+                for (Processo processo : listaProcessos) {
+                    coordId = processo.isCoordenador() ? (int)processo.getId() : -1;
+                }
+
+                if (coordId > 0) {
+                    listaProcessos.get(coordId).setAtivo(false);
+                    System.out.println("O processo coordenador parou");
+                }
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (coordId > 0) {
+                    listaProcessos.get(coordId).setAtivo(true);
+                    System.out.println("O processo P" + coordId + " voltou");
+                    eleicao(coordId);
+                }
+            }
+        }).start();
     }
 }
