@@ -51,6 +51,10 @@ public class Server implements Runnable {
         }
     }
 
+    public void changeRingStatus(String message) {
+        this.ring.setStatus(message);
+    }
+
     public void shutdown() {
         try {
 
@@ -98,6 +102,7 @@ public class Server implements Runnable {
 
                 while ((message = in.readLine()) != null) {
                     if (message.startsWith("/nick ")) {
+                        
                         String[] messageSplit = message.split(" ", 2);
                         if (messageSplit.length == 2) {
                             broadcast(nickname + " renamed themselves to " + messageSplit[1]);
@@ -107,6 +112,16 @@ public class Server implements Runnable {
                         } else {
                             out.println("No nickname provided!");
                         }
+
+                    } else if (message.startsWith("/status ")) {
+                        
+                        String[] messageSplit = message.split(" ", 2);
+                        if (messageSplit.length == 2) {
+                            changeRingStatus(messageSplit[1]);
+                        } else {
+                            out.println("No status provided!");
+                        }
+
                     } else if (message.startsWith("/quit")) {
                         broadcast(nickname + " left the chat!");
                         shutdown();

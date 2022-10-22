@@ -1,12 +1,55 @@
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RingPipe extends Thread{
 
     private long counterState = 0;
-    private boolean done;
+    private List<Process> processList;
+    private String status;
 
     public RingPipe() {
-        this.done = false;
+        this.status = "NORMAL";
+        setProcessList();
+    }
+
+    @Override
+    public void run() {
+        try {
+            
+            this.processList.get(0).sendMessageToNextActiveProcess();
+
+            // while (!done) {
+            //     System.out.println(this.currentProcessId);
+                
+            //     TimeUnit.SECONDS.sleep(2);
+            // }
+
+        } catch (Exception e) {
+            // IGNORE
+        }
+
+    }
+
+    public void setProcessList() {
+        this.processList = new ArrayList<>();
+
+        this.processList.add(new Process(1, this));
+        this.processList.add(new Process(2, this));
+        this.processList.add(new Process(3, this));
+        this.processList.add(new Process(4, this));
+
+        this.processList.get(0).setNext(this.processList.get(1));
+        this.processList.get(1).setNext(this.processList.get(2));
+        this.processList.get(2).setNext(this.processList.get(3));
+        this.processList.get(3).setNext(this.processList.get(0));
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public long getCounterState() {
@@ -15,27 +58,5 @@ public class RingPipe extends Thread{
 
     public void setCounterState(long counterState) {
         this.counterState = counterState + 1;
-    }
-
-    @Override
-    public void run() {
-        try {
-            
-            while (!done) {
-                System.out.println(getCounterState());
-                
-                setCounterState(this.counterState);
-                
-                TimeUnit.SECONDS.sleep(2);
-            }
-
-        } catch (Exception e) {
-            shutdown();
-        }
-
-    }
-
-    public void shutdown() {
-        this.done = true;
     }
 }
